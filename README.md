@@ -15,7 +15,7 @@
 ## Решения по схеме базы данных
 
 1. Можно было создать таблицы: companies(id, name), departments(id, name, phone, company_id), employees(id, name,
-   surname, phone, company_id, department_id), employees_passports(number, type, employee_id)
+   surname, phone, company_id, department_id, passport_id), employees_passports(number, type, employee_id)
 2. Или: companies(id, name), employees(id, name, surname, phone, company_id), employees_details(employee_id,
    passport_type, passport_number, department_name, department_phone)
 
