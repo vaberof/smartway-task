@@ -1,0 +1,473 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API Server for Employee Application",
+        "title": "Employee API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8000",
+    "basePath": "/api/v1",
+    "paths": {
+        "/employees": {
+            "post": {
+                "description": "Create a new employee",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "employees"
+                ],
+                "summary": "Create a new employee",
+                "operationId": "create-employee",
+                "parameters": [
+                    {
+                        "description": "Payload for creating an employee",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_app_entrypoint_http.createEmployeeRequestBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_app_entrypoint_http.createEmployeeResponseBody"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/employees/companies/{companyId}": {
+            "get": {
+                "description": "List employees by company id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "employees"
+                ],
+                "summary": "List employees by company id",
+                "operationId": "list-employees-by-company-id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "An optional query parameter 'limit' that limits total number of returned employees. By default 'limit' = 10",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "An optional query parameter 'offset' that indicates how many records should be skipped while listing employees. By default 'offset' = 0",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Path parameter 'companyId'",
+                        "name": "companyId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_app_entrypoint_http.listEmployeeResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/employees/companies/{companyId}/departments/{departmentName}": {
+            "get": {
+                "description": "List employees by department name",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "employees"
+                ],
+                "summary": "List employees by department name",
+                "operationId": "list-employees-by-department-name",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "An optional query parameter 'limit' that limits total number of returned employees. By default 'limit' = 10",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "An optional query parameter 'offset' that indicates how many records should be skipped while listing employees. By default 'offset' = 0",
+                        "name": "offset",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Path parameter 'companyId'",
+                        "name": "companyId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Path parameter 'departmentName'",
+                        "name": "departmentName",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_app_entrypoint_http.listEmployeeResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/employees/{employeeId}": {
+            "patch": {
+                "description": "update a new employee",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "employees"
+                ],
+                "summary": "Update a new employee",
+                "operationId": "update-employee",
+                "parameters": [
+                    {
+                        "description": "Payload for updating an employee",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_app_entrypoint_http.updateEmployeeRequestBody"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Path parameter 'employeeId'",
+                        "name": "employeeId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_app_entrypoint_http.updateEmployeeResponseBody"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/employees/{id}": {
+            "delete": {
+                "description": "Delete an employee",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "employees"
+                ],
+                "summary": "Delete an employee",
+                "operationId": "delete-employee",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Employees`s id that needs to be deleted",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_app_entrypoint_http.deleteEmployeeResponseBody"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response": {
+            "type": "object",
+            "properties": {
+                "payload": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_app_entrypoint_http.CreateDepartment": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_app_entrypoint_http.CreatePassport": {
+            "type": "object",
+            "properties": {
+                "number": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_app_entrypoint_http.ListDepartment": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_app_entrypoint_http.ListPassport": {
+            "type": "object",
+            "properties": {
+                "number": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_app_entrypoint_http.UpdateDepartment": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_app_entrypoint_http.UpdatePassport": {
+            "type": "object",
+            "properties": {
+                "number": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_app_entrypoint_http.createEmployeeRequestBody": {
+            "type": "object",
+            "properties": {
+                "company_id": {
+                    "type": "integer"
+                },
+                "department": {
+                    "$ref": "#/definitions/internal_app_entrypoint_http.CreateDepartment"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "passport": {
+                    "$ref": "#/definitions/internal_app_entrypoint_http.CreatePassport"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "surname": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_app_entrypoint_http.createEmployeeResponseBody": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "internal_app_entrypoint_http.deleteEmployeeResponseBody": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_app_entrypoint_http.listEmployeeResponse": {
+            "type": "object",
+            "properties": {
+                "company_id": {
+                    "type": "integer"
+                },
+                "department": {
+                    "$ref": "#/definitions/internal_app_entrypoint_http.ListDepartment"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "passport": {
+                    "$ref": "#/definitions/internal_app_entrypoint_http.ListPassport"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "surname": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_app_entrypoint_http.updateEmployeeRequestBody": {
+            "type": "object",
+            "properties": {
+                "company_id": {
+                    "type": "integer"
+                },
+                "department": {
+                    "$ref": "#/definitions/internal_app_entrypoint_http.UpdateDepartment"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "passport": {
+                    "$ref": "#/definitions/internal_app_entrypoint_http.UpdatePassport"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "surname": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_app_entrypoint_http.updateEmployeeResponseBody": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

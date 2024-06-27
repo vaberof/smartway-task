@@ -1,0 +1,317 @@
+basePath: /api/v1
+definitions:
+  github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response:
+    properties:
+      payload:
+        items:
+          type: integer
+        type: array
+      status:
+        type: string
+    type: object
+  internal_app_entrypoint_http.CreateDepartment:
+    properties:
+      name:
+        type: string
+      phone:
+        type: string
+    type: object
+  internal_app_entrypoint_http.CreatePassport:
+    properties:
+      number:
+        type: string
+      type:
+        type: string
+    type: object
+  internal_app_entrypoint_http.ListDepartment:
+    properties:
+      name:
+        type: string
+      phone:
+        type: string
+    type: object
+  internal_app_entrypoint_http.ListPassport:
+    properties:
+      number:
+        type: string
+      type:
+        type: string
+    type: object
+  internal_app_entrypoint_http.UpdateDepartment:
+    properties:
+      name:
+        type: string
+      phone:
+        type: string
+    type: object
+  internal_app_entrypoint_http.UpdatePassport:
+    properties:
+      number:
+        type: string
+      type:
+        type: string
+    type: object
+  internal_app_entrypoint_http.createEmployeeRequestBody:
+    properties:
+      company_id:
+        type: integer
+      department:
+        $ref: '#/definitions/internal_app_entrypoint_http.CreateDepartment'
+      name:
+        type: string
+      passport:
+        $ref: '#/definitions/internal_app_entrypoint_http.CreatePassport'
+      phone:
+        type: string
+      surname:
+        type: string
+    type: object
+  internal_app_entrypoint_http.createEmployeeResponseBody:
+    properties:
+      id:
+        type: integer
+    type: object
+  internal_app_entrypoint_http.deleteEmployeeResponseBody:
+    properties:
+      message:
+        type: string
+    type: object
+  internal_app_entrypoint_http.listEmployeeResponse:
+    properties:
+      company_id:
+        type: integer
+      department:
+        $ref: '#/definitions/internal_app_entrypoint_http.ListDepartment'
+      name:
+        type: string
+      passport:
+        $ref: '#/definitions/internal_app_entrypoint_http.ListPassport'
+      phone:
+        type: string
+      surname:
+        type: string
+    type: object
+  internal_app_entrypoint_http.updateEmployeeRequestBody:
+    properties:
+      company_id:
+        type: integer
+      department:
+        $ref: '#/definitions/internal_app_entrypoint_http.UpdateDepartment'
+      name:
+        type: string
+      passport:
+        $ref: '#/definitions/internal_app_entrypoint_http.UpdatePassport'
+      phone:
+        type: string
+      surname:
+        type: string
+    type: object
+  internal_app_entrypoint_http.updateEmployeeResponseBody:
+    properties:
+      message:
+        type: string
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  description: API Server for Employee Application
+  title: Employee API
+  version: "1.0"
+paths:
+  /employees:
+    post:
+      consumes:
+      - application/json
+      description: Create a new employee
+      operationId: create-employee
+      parameters:
+      - description: Payload for creating an employee
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/internal_app_entrypoint_http.createEmployeeRequestBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_app_entrypoint_http.createEmployeeResponseBody'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response'
+      summary: Create a new employee
+      tags:
+      - employees
+  /employees/{employeeId}:
+    patch:
+      consumes:
+      - application/json
+      description: update a new employee
+      operationId: update-employee
+      parameters:
+      - description: Payload for updating an employee
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/internal_app_entrypoint_http.updateEmployeeRequestBody'
+      - description: Path parameter 'employeeId'
+        in: path
+        name: employeeId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_app_entrypoint_http.updateEmployeeResponseBody'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response'
+      summary: Update a new employee
+      tags:
+      - employees
+  /employees/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an employee
+      operationId: delete-employee
+      parameters:
+      - description: Employees`s id that needs to be deleted
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_app_entrypoint_http.deleteEmployeeResponseBody'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response'
+      summary: Delete an employee
+      tags:
+      - employees
+  /employees/companies/{companyId}:
+    get:
+      consumes:
+      - application/json
+      description: List employees by company id
+      operationId: list-employees-by-company-id
+      parameters:
+      - description: An optional query parameter 'limit' that limits total number
+          of returned employees. By default 'limit' = 10
+        in: query
+        name: limit
+        type: integer
+      - description: An optional query parameter 'offset' that indicates how many
+          records should be skipped while listing employees. By default 'offset' =
+          0
+        in: query
+        name: offset
+        type: integer
+      - description: Path parameter 'companyId'
+        in: path
+        name: companyId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_app_entrypoint_http.listEmployeeResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response'
+      summary: List employees by company id
+      tags:
+      - employees
+  /employees/companies/{companyId}/departments/{departmentName}:
+    get:
+      consumes:
+      - application/json
+      description: List employees by department name
+      operationId: list-employees-by-department-name
+      parameters:
+      - description: An optional query parameter 'limit' that limits total number
+          of returned employees. By default 'limit' = 10
+        in: query
+        name: limit
+        type: integer
+      - description: An optional query parameter 'offset' that indicates how many
+          records should be skipped while listing employees. By default 'offset' =
+          0
+        in: query
+        name: offset
+        type: integer
+      - description: Path parameter 'companyId'
+        in: path
+        name: companyId
+        required: true
+        type: integer
+      - description: Path parameter 'departmentName'
+        in: path
+        name: departmentName
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_app_entrypoint_http.listEmployeeResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_vaberof_smartway-task_pkg_http_protocols_apiv1.Response'
+      summary: List employees by department name
+      tags:
+      - employees
+swagger: "2.0"
