@@ -41,8 +41,12 @@ tests.run.verbose:
 swagger.gen:
 	swag init --parseDependency --parseInternal -g ./cmd/smartway-task/main.go -o ./cmd/smartway-task/docs
 
-mock.gen: mock.employee_storage.gen
+mock.gen: mock.employee_storage.gen mock.company_storage.gen
 
 mock.employee_storage.gen:
 	mockgen -source=internal/domain/employee/employee_storage.go \
 	-destination=internal/domain/employee/mocks/mock_employee_storage.go
+
+mock.company_storage.gen:
+	mockgen -source=internal/domain/employee/company_storage.go \
+	-destination=internal/domain/employee/mocks/mock_company_storage.go

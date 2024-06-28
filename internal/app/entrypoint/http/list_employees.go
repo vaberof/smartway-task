@@ -39,20 +39,20 @@ type ListDepartment struct {
 	Phone string `json:"phone"`
 }
 
-//	@Summary		List employees by company id
-//	@Tags			employees
-//	@Description	List employees by company id
-//	@ID				list-employees-by-company-id
-//	@Accept			json
-//	@Produce		json
-//	@Param			limit		query		integer	false	"An optional query parameter 'limit' that limits total number of returned employees. By default 'limit' = 10"
-//	@Param			offset		query		integer	false	"An optional query parameter 'offset' that indicates how many records should be skipped while listing employees. By default 'offset' = 0"
-//	@Param			companyId	path		integer	true	"Path parameter 'companyId'"
-//	@Success		200			{object}	listEmployeeResponse
-//	@Failure		400			{object}	apiv1.Response
-//	@Failure		404			{object}	apiv1.Response
-//	@Failure		500			{object}	apiv1.Response
-//	@Router			/employees/companies/{companyId} [get]
+// @Summary		List employees by company id
+// @Tags			employees
+// @Description	List employees by company id
+// @ID				list-employees-by-company-id
+// @Accept			json
+// @Produce		json
+// @Param			limit		query		integer	false	"An optional query parameter 'limit' that limits total number of returned employees. By default 'limit' = 10"
+// @Param			offset		query		integer	false	"An optional query parameter 'offset' that indicates how many records should be skipped while listing employees. By default 'offset' = 0"
+// @Param			companyId	path		integer	true	"Path parameter 'companyId'"
+// @Success		200			{object}	listEmployeeResponse
+// @Failure		400			{object}	apiv1.Response
+// @Failure		404			{object}	apiv1.Response
+// @Failure		500			{object}	apiv1.Response
+// @Router			/employees/companies/{companyId} [get]
 func (h *Handler) ListEmployeesByCompanyIdHandler() http.HandlerFunc {
 	return func(rw http.ResponseWriter, request *http.Request) {
 		var err error
@@ -110,8 +110,8 @@ func (h *Handler) ListEmployeesByCompanyIdHandler() http.HandlerFunc {
 
 		employees, err := h.employeeService.ListByCompanyId(companyId, limit, offset)
 		if err != nil {
-			if errors.Is(err, employee.ErrEmployeeNotFound) {
-				views.RenderJSON(rw, request, http.StatusNotFound, apiv1.Error(apiv1.CodeNotFound, "Employee not found"))
+			if errors.Is(err, employee.ErrCompanyNotFound) {
+				views.RenderJSON(rw, request, http.StatusNotFound, apiv1.Error(apiv1.CodeNotFound, "Company not found"))
 			} else {
 				views.RenderJSON(rw, request, http.StatusInternalServerError, apiv1.Error(apiv1.CodeInternalError, err.Error()))
 			}
@@ -127,21 +127,21 @@ func (h *Handler) ListEmployeesByCompanyIdHandler() http.HandlerFunc {
 	}
 }
 
-//	@Summary		List employees by department name
-//	@Tags			employees
-//	@Description	List employees by department name
-//	@ID				list-employees-by-department-name
-//	@Accept			json
-//	@Produce		json
-//	@Param			limit			query		integer	false	"An optional query parameter 'limit' that limits total number of returned employees. By default 'limit' = 10"
-//	@Param			offset			query		integer	false	"An optional query parameter 'offset' that indicates how many records should be skipped while listing employees. By default 'offset' = 0"
-//	@Param			companyId		path		integer	true	"Path parameter 'companyId'"
-//	@Param			departmentName	path		integer	true	"Path parameter 'departmentName'"
-//	@Success		200				{object}	listEmployeeResponse
-//	@Failure		400				{object}	apiv1.Response
-//	@Failure		404				{object}	apiv1.Response
-//	@Failure		500				{object}	apiv1.Response
-//	@Router			/employees/companies/{companyId}/departments/{departmentName} [get]
+// @Summary		List employees by department name
+// @Tags			employees
+// @Description	List employees by department name
+// @ID				list-employees-by-department-name
+// @Accept			json
+// @Produce		json
+// @Param			limit			query		integer	false	"An optional query parameter 'limit' that limits total number of returned employees. By default 'limit' = 10"
+// @Param			offset			query		integer	false	"An optional query parameter 'offset' that indicates how many records should be skipped while listing employees. By default 'offset' = 0"
+// @Param			companyId		path		integer	true	"Path parameter 'companyId'"
+// @Param			departmentName	path		string	true	"Path parameter 'departmentName'"
+// @Success		200				{object}	listEmployeeResponse
+// @Failure		400				{object}	apiv1.Response
+// @Failure		404				{object}	apiv1.Response
+// @Failure		500				{object}	apiv1.Response
+// @Router			/employees/companies/{companyId}/departments/{departmentName} [get]
 func (h *Handler) ListEmployeesByDepartmentNameHandler() http.HandlerFunc {
 	return func(rw http.ResponseWriter, request *http.Request) {
 		var err error
@@ -206,8 +206,10 @@ func (h *Handler) ListEmployeesByDepartmentNameHandler() http.HandlerFunc {
 
 		employees, err := h.employeeService.ListByDepartmentName(companyId, departmentName, limit, offset)
 		if err != nil {
-			if errors.Is(err, employee.ErrEmployeeNotFound) {
-				views.RenderJSON(rw, request, http.StatusNotFound, apiv1.Error(apiv1.CodeNotFound, "Employee not found"))
+			if errors.Is(err, employee.ErrCompanyNotFound) {
+				views.RenderJSON(rw, request, http.StatusNotFound, apiv1.Error(apiv1.CodeNotFound, "Company not found"))
+			} else if errors.Is(err, employee.ErrDepartmentNotFound) {
+				views.RenderJSON(rw, request, http.StatusNotFound, apiv1.Error(apiv1.CodeNotFound, "Department not found"))
 			} else {
 				views.RenderJSON(rw, request, http.StatusInternalServerError, apiv1.Error(apiv1.CodeInternalError, err.Error()))
 			}

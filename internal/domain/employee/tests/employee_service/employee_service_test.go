@@ -15,9 +15,10 @@ func TestCreate(t *testing.T) {
 	defer ctrl.Finish()
 
 	employeeStorage := mocks.NewMockEmployeeStorage(ctrl)
+	companyStorage := mocks.NewMockCompanyStorage(ctrl)
 	logsBuilder := logs.New(os.Stdout, nil)
 
-	employeeService := employee.NewEmployeeService(employeeStorage, logsBuilder)
+	employeeService := employee.NewEmployeeService(employeeStorage, companyStorage, logsBuilder)
 
 	name := "name"
 	surname := "surname"
@@ -30,6 +31,7 @@ func TestCreate(t *testing.T) {
 
 	expectedId := int64(1)
 
+	companyStorage.EXPECT().IsExists(companyId).Return(true, nil).AnyTimes()
 	employeeStorage.EXPECT().Create(name, surname, phone, companyId, passportType, passportNumber, departmentName, departmentPhone).Return(expectedId, nil).AnyTimes()
 	actualId, err := employeeService.Create(name, surname, phone, companyId, passportType, passportNumber, departmentName, departmentPhone)
 
@@ -42,9 +44,10 @@ func TestDelete(t *testing.T) {
 	defer ctrl.Finish()
 
 	employeeStorage := mocks.NewMockEmployeeStorage(ctrl)
+	companyStorage := mocks.NewMockCompanyStorage(ctrl)
 	logsBuilder := logs.New(os.Stdout, nil)
 
-	employeeService := employee.NewEmployeeService(employeeStorage, logsBuilder)
+	employeeService := employee.NewEmployeeService(employeeStorage, companyStorage, logsBuilder)
 
 	employeeId := int64(1)
 
@@ -59,9 +62,10 @@ func TestUpdate(t *testing.T) {
 	defer ctrl.Finish()
 
 	employeeStorage := mocks.NewMockEmployeeStorage(ctrl)
+	companyStorage := mocks.NewMockCompanyStorage(ctrl)
 	logsBuilder := logs.New(os.Stdout, nil)
 
-	employeeService := employee.NewEmployeeService(employeeStorage, logsBuilder)
+	employeeService := employee.NewEmployeeService(employeeStorage, companyStorage, logsBuilder)
 
 	id := int64(1)
 	name := "name"
@@ -73,6 +77,7 @@ func TestUpdate(t *testing.T) {
 	departmentName := "departmentName"
 	departmentPhone := "departmentPhone"
 
+	companyStorage.EXPECT().IsExists(companyId).Return(true, nil).AnyTimes()
 	employeeStorage.EXPECT().Update(id, &name, &surname, &phone, &companyId, &passportType, &passportNumber, &departmentName, &departmentPhone).Return(nil).AnyTimes()
 	err := employeeService.Update(id, &name, &surname, &phone, &companyId, &passportType, &passportNumber, &departmentName, &departmentPhone)
 
@@ -84,9 +89,10 @@ func TestListByCompanyId(t *testing.T) {
 	defer ctrl.Finish()
 
 	employeeStorage := mocks.NewMockEmployeeStorage(ctrl)
+	companyStorage := mocks.NewMockCompanyStorage(ctrl)
 	logsBuilder := logs.New(os.Stdout, nil)
 
-	employeeService := employee.NewEmployeeService(employeeStorage, logsBuilder)
+	employeeService := employee.NewEmployeeService(employeeStorage, companyStorage, logsBuilder)
 
 	expectedEmployees := []*employee.Employee{
 		{
@@ -125,6 +131,7 @@ func TestListByCompanyId(t *testing.T) {
 	limit := 10
 	offset := 0
 
+	companyStorage.EXPECT().IsExists(listByCompanyId).Return(true, nil).AnyTimes()
 	employeeStorage.EXPECT().ListByCompanyId(listByCompanyId, limit, offset).Return(expectedEmployees, nil).AnyTimes()
 	actualEmployees, err := employeeService.ListByCompanyId(listByCompanyId, limit, offset)
 
@@ -137,9 +144,10 @@ func TestListByDepartmentName(t *testing.T) {
 	defer ctrl.Finish()
 
 	employeeStorage := mocks.NewMockEmployeeStorage(ctrl)
+	companyStorage := mocks.NewMockCompanyStorage(ctrl)
 	logsBuilder := logs.New(os.Stdout, nil)
 
-	employeeService := employee.NewEmployeeService(employeeStorage, logsBuilder)
+	employeeService := employee.NewEmployeeService(employeeStorage, companyStorage, logsBuilder)
 
 	expectedEmployees := []*employee.Employee{
 		{
@@ -179,6 +187,7 @@ func TestListByDepartmentName(t *testing.T) {
 	limit := 10
 	offset := 0
 
+	companyStorage.EXPECT().IsExists(listByCompanyId).Return(true, nil).AnyTimes()
 	employeeStorage.EXPECT().ListByDepartmentName(listByCompanyId, listByDepartmentName, limit, offset).Return(expectedEmployees, nil).AnyTimes()
 	actualEmployees, err := employeeService.ListByDepartmentName(listByCompanyId, listByDepartmentName, limit, offset)
 

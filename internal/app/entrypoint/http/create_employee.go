@@ -2,9 +2,11 @@ package http
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/go-chi/render"
 	"github.com/go-playground/validator/v10"
 	"github.com/vaberof/smartway-task/internal/app/entrypoint/http/views"
+	"github.com/vaberof/smartway-task/internal/domain/employee"
 	"github.com/vaberof/smartway-task/pkg/http/protocols/apiv1"
 	"net/http"
 )
@@ -73,7 +75,11 @@ func (h *Handler) CreateEmployeeHandler() http.HandlerFunc {
 			createEmployeeReqBody.Department.Name,
 			createEmployeeReqBody.Department.Phone)
 		if err != nil {
-			views.RenderJSON(rw, request, http.StatusInternalServerError, apiv1.Error(apiv1.CodeInternalError, err.Error()))
+			if errors.Is(err, employee.ErrCompanyNotFound) {
+				views.RenderJSON(rw, request, http.StatusNotFound, apiv1.Error(apiv1.CodeNotFound, "Company not found"))
+			} else {
+				views.RenderJSON(rw, request, http.StatusInternalServerError, apiv1.Error(apiv1.CodeInternalError, err.Error()))
+			}
 
 			return
 		}

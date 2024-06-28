@@ -65,6 +65,13 @@ definitions:
         type: string
       surname:
         type: string
+    required:
+    - company_id
+    - department
+    - name
+    - passport
+    - phone
+    - surname
     type: object
   internal_app_entrypoint_http.createEmployeeResponseBody:
     properties:
@@ -291,7 +298,7 @@ paths:
         in: path
         name: departmentName
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:

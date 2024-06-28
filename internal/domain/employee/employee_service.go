@@ -26,14 +26,16 @@ type EmployeeService interface {
 
 type employeeServiceImpl struct {
 	employeeStorage EmployeeStorage
+	companyStorage  CompanyStorage
 
 	logger *slog.Logger
 }
 
-func NewEmployeeService(employeeStorage EmployeeStorage, logs *logs.Logs) EmployeeService {
+func NewEmployeeService(employeeStorage EmployeeStorage, companyStorage CompanyStorage, logs *logs.Logs) EmployeeService {
 	logger := logs.WithName("domain.employee.service")
 	return &employeeServiceImpl{
 		employeeStorage: employeeStorage,
+		companyStorage:  companyStorage,
 		logger:          logger,
 	}
 }
@@ -50,6 +52,14 @@ func (e *employeeServiceImpl) Create(name, surname, phone string, companyId int6
 
 	log.Info("creating an employee")
 
+	isCompanyExists, err := e.companyStorage.IsExists(companyId)
+	if err != nil {
+		return errorEmployeeId, fmt.Errorf("%s: %w", operation, err)
+	}
+	if !isCompanyExists {
+		return errorEmployeeId, fmt.Errorf("%s: %w", operation, ErrCompanyNotFound)
+	}
+
 	employeeId, err := e.employeeStorage.Create(name, surname, phone, companyId, passportType, passportNumber, departmentName, departmentPhone)
 	if err != nil {
 		log.Error("failed to create an employee")
@@ -57,6 +67,7 @@ func (e *employeeServiceImpl) Create(name, surname, phone string, companyId int6
 		if errors.Is(err, storage.ErrEmployeeNotFound) {
 			return errorEmployeeId, fmt.Errorf("%s: %w", operation, ErrEmployeeNotFound)
 		}
+
 		return errorEmployeeId, fmt.Errorf("%s: %w", operation, err)
 	}
 
@@ -75,6 +86,16 @@ func (e *employeeServiceImpl) Update(id int64, name, surname, phone *string, com
 
 	log.Info("updating an employee")
 
+	if companyId != nil {
+		isCompanyExists, err := e.companyStorage.IsExists(*companyId)
+		if err != nil {
+			return fmt.Errorf("%s: %w", operation, err)
+		}
+		if !isCompanyExists {
+			return fmt.Errorf("%s: %w", operation, ErrCompanyNotFound)
+		}
+	}
+
 	err := e.employeeStorage.Update(id, name, surname, phone, companyId, passportType, passportNumber, departmentName, departmentPhone)
 	if err != nil {
 		log.Error("failed to update an employee")
@@ -82,6 +103,7 @@ func (e *employeeServiceImpl) Update(id int64, name, surname, phone *string, com
 		if errors.Is(err, storage.ErrEmployeeNotFound) {
 			return fmt.Errorf("%s: %w", operation, ErrEmployeeNotFound)
 		}
+
 		return fmt.Errorf("%s: %w", operation, err)
 	}
 
@@ -107,6 +129,7 @@ func (e *employeeServiceImpl) Delete(id int64) error {
 		if errors.Is(err, storage.ErrEmployeeNotFound) {
 			return fmt.Errorf("%s: %w", operation, ErrEmployeeNotFound)
 		}
+
 		return fmt.Errorf("%s: %w", operation, err)
 	}
 
@@ -127,6 +150,14 @@ func (e *employeeServiceImpl) ListByCompanyId(companyId int64, limit, offset int
 
 	log.Info("listing employees by company id")
 
+	isCompanyExists, err := e.companyStorage.IsExists(companyId)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", operation, err)
+	}
+	if !isCompanyExists {
+		return nil, fmt.Errorf("%s: %w", operation, ErrCompanyNotFound)
+	}
+
 	employees, err := e.employeeStorage.ListByCompanyId(companyId, limit, offset)
 	if err != nil {
 		log.Error("failed to list employees by company id")
@@ -134,6 +165,7 @@ func (e *employeeServiceImpl) ListByCompanyId(companyId int64, limit, offset int
 		if errors.Is(err, storage.ErrCompanyNotFound) {
 			return nil, fmt.Errorf("%s: %w", operation, ErrCompanyNotFound)
 		}
+
 		return nil, fmt.Errorf("%s: %w", operation, err)
 	}
 
@@ -155,13 +187,18 @@ func (e *employeeServiceImpl) ListByDepartmentName(companyId int64, departmentNa
 
 	log.Info("listing employees by department name")
 
+	isCompanyExists, err := e.companyStorage.IsExists(companyId)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", operation, err)
+	}
+	if !isCompanyExists {
+		return nil, fmt.Errorf("%s: %w", operation, ErrCompanyNotFound)
+	}
+
 	employees, err := e.employeeStorage.ListByDepartmentName(companyId, departmentName, limit, offset)
 	if err != nil {
 		log.Error("failed to list employees by department name")
 
-		if errors.Is(err, storage.ErrDepartmentNotFound) {
-			return nil, fmt.Errorf("%s: %w", operation, ErrDepartmentNotFound)
-		}
 		return nil, fmt.Errorf("%s: %w", operation, err)
 	}
 

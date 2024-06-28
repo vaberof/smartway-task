@@ -260,6 +260,7 @@ func (p *PgEmployeeStorage) ListByDepartmentName(companyId int64, departmentName
 			&pgEmployee.Department,
 		)
 		if err != nil {
+
 			return nil, fmt.Errorf("failed to list employees by department name: %w", err)
 		}
 

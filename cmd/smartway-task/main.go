@@ -7,6 +7,7 @@ import (
 	_ "github.com/vaberof/smartway-task/cmd/smartway-task/docs"
 	"github.com/vaberof/smartway-task/internal/app/entrypoint/http"
 	"github.com/vaberof/smartway-task/internal/domain/employee"
+	"github.com/vaberof/smartway-task/internal/infra/storage/postgres/pgcompany"
 	"github.com/vaberof/smartway-task/internal/infra/storage/postgres/pgemployee"
 	"github.com/vaberof/smartway-task/pkg/database/postgres"
 	"github.com/vaberof/smartway-task/pkg/http/httpserver"
@@ -41,8 +42,9 @@ func main() {
 	}
 
 	pgEmployeeStorage := pgemployee.NewPgEmployeeStorage(postgresManagedDb.PostgresDb)
+	pgCompanyStorage := pgcompany.NewPgCompanyStorage(postgresManagedDb.PostgresDb)
 
-	domainEmployeeService := employee.NewEmployeeService(pgEmployeeStorage, logger)
+	domainEmployeeService := employee.NewEmployeeService(pgEmployeeStorage, pgCompanyStorage, logger)
 
 	httpHandler := http.NewHandler(domainEmployeeService)
 

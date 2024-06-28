@@ -160,7 +160,7 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "Path parameter 'departmentName'",
                         "name": "departmentName",
                         "in": "path",
@@ -384,6 +384,14 @@ const docTemplate = `{
         },
         "internal_app_entrypoint_http.createEmployeeRequestBody": {
             "type": "object",
+            "required": [
+                "company_id",
+                "department",
+                "name",
+                "passport",
+                "phone",
+                "surname"
+            ],
             "properties": {
                 "company_id": {
                     "type": "integer"
