@@ -3,18 +3,19 @@ package http
 import (
 	"encoding/json"
 	"github.com/go-chi/render"
+	"github.com/go-playground/validator/v10"
 	"github.com/vaberof/smartway-task/internal/app/entrypoint/http/views"
 	"github.com/vaberof/smartway-task/pkg/http/protocols/apiv1"
 	"net/http"
 )
 
 type createEmployeeRequestBody struct {
-	Name       string           `json:"name"`
-	Surname    string           `json:"surname"`
-	Phone      string           `json:"phone"`
-	CompanyId  int64            `json:"company_id"`
-	Passport   CreatePassport   `json:"passport"`
-	Department CreateDepartment `json:"department"`
+	Name       string           `json:"name" validate:"required"`
+	Surname    string           `json:"surname" validate:"required"`
+	Phone      string           `json:"phone" validate:"required"`
+	CompanyId  int64            `json:"company_id" validate:"required"`
+	Passport   CreatePassport   `json:"passport" validate:"required"`
+	Department CreateDepartment `json:"department" validate:"required"`
 }
 
 type CreatePassport struct {
@@ -50,6 +51,13 @@ func (h *Handler) CreateEmployeeHandler() http.HandlerFunc {
 	return func(rw http.ResponseWriter, request *http.Request) {
 		createEmployeeReqBody := &createEmployeeRequestBody{}
 		if err := render.Bind(request, createEmployeeReqBody); err != nil {
+			views.RenderJSON(rw, request, http.StatusBadRequest, apiv1.Error(apiv1.CodeBadRequest, "Invalid request body"))
+
+			return
+		}
+
+		validate := validator.New()
+		if err := validate.Struct(createEmployeeReqBody); err != nil {
 			views.RenderJSON(rw, request, http.StatusBadRequest, apiv1.Error(apiv1.CodeBadRequest, "Invalid request body"))
 
 			return
